@@ -3,6 +3,7 @@
 #include <glm\gtc\matrix_transform.hpp>
 #include <cstdio>
 #include <cassert>
+#include <iostream>
 
 #include "GL_framework.h"
 
@@ -28,6 +29,16 @@ namespace Cube {
 	void drawCube();
 }
 
+namespace MyFirstShader {
+	void MyInitCode(void);
+	GLuint myShaderCompile(void);
+
+	void MyCleanupCode(void);
+	void MyRenderCode(double currentTime);
+
+	GLuint myRenderProgram;
+	GLuint myVAO;
+}
 
 
 
@@ -127,7 +138,7 @@ void GLcleanup() {
 void GLrender(double currentTime) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	RV::_modelView = glm::mat4(1.f);
+	RV::_modelView = glm::mat4(1.f);																		//Moviment de camera? 
 	RV::_modelView = glm::translate(RV::_modelView, glm::vec3(RV::panv[0], RV::panv[1], RV::panv[2]));
 	RV::_modelView = glm::rotate(RV::_modelView, RV::rota[1], glm::vec3(1.f, 0.f, 0.f));
 	RV::_modelView = glm::rotate(RV::_modelView, RV::rota[0], glm::vec3(0.f, 1.f, 0.f));
@@ -139,6 +150,20 @@ void GLrender(double currentTime) {
 	Axis::drawAxis();
 	Cube::drawCube();*/
 
+	//Dibuixar un color
+	static const GLfloat red[] = { 1.0f,0.0f,0.0f,1.0f };			//Es plena el buffer amb coses (un color vermell a tot el buffer). Rep el R,G,B,Alfa 
+	glClearBufferfv(GL_COLOR,0,red);							//En el buffer, que esta identificat amb un GL_COLOR, li pasem el red 
+	//glClearBuffer = pon en el buffer; (GL_ENUM buffer = adreça de memoria de la tarjeta grafica que correspon al buffer de color, 
+	//GLint drawBuffer = En quin buffer es vol pintar, el 0 significa el primer, const GLfloat * value = es pot pasar tant un float com un vector);
+	
+	const GLfloat green[] = { (float)sin(currentTime) * 0.5f + 0.5f,(float)cos(currentTime) * 0.5f + 0.5f,0.0f,1.0f };
+	glClearBufferfv(GL_COLOR, 0, green);
+	//Aixo de dalt, es per cambiar de color continuament el buffer
+	//static const, es te de cambiar pk no cambia de color. Const es te de quedar per necesitat. Cada cop que es crida la funcio, es torna a crear la variable, per aixo funciona i cambia de color
+	//(float) es per cambiar la multiplicacio de sin amb currentTime (dona un double, que no va be)
+	//sin es per tenir un rang definit
+	//currentTime es els milisegons que tarda en refrescar la pantalla?
+	
 
 
 	ImGui::Render();
@@ -502,7 +527,7 @@ void drawSphere() {
 }
 }
 
-////////////////////////////////////////////////// CAPSULE
+////////////////////////////////////////////////// CAPSULE				
 namespace Capsule {
 GLuint capsuleVao;
 GLuint capsuleVbo[2];
@@ -987,4 +1012,38 @@ void main() {\n\
 	}
 
 
+}
+
+///////////////////////////////////////////////////////////// MI PRIMER SHADER
+namespace MyfirstShader {
+
+//1. define the shader source code 
+	static const GLchar * vertex_shader_source[] = 
+	{
+		"#version 330\n\
+		\n\
+		void main(){ \n\
+		gl_Position = vec4(0.0,0.0,0.5,1.0);\n\
+		"
+	};	//Versio d' OpenGL
+		
+		//vector de 4 amb X, Y, Z i 1 = punt, 0 = vector. 
+
+//2. compile and link the shaders
+	GLuint	myShaderCompile(void) {			//Punter a un espai de memoria, on tenim el nostre programa. Ens donara un valor, per invocar al programa compilat. GLuint = enter si o si positiu 
+
+	}	
+//3. init function
+	void MyInitCode(void) {
+
+	}
+//4. render function 
+	void MyRenderCode(double currentTime) {
+
+	}
+
+//5. cleanup function 
+	void MyCleanupCode(void) {
+
+	}
 }

@@ -4,6 +4,7 @@
 #include <imgui\imgui.h>
 #include <imgui\imgui_impl_sdl_gl3.h>
 #include <cstdio>
+#include <iostream>	
 
 #include "GL_framework.h"
 
@@ -87,10 +88,10 @@ int main(int argc, char** argv) {
 	int display_w, display_h;
 	SDL_GL_GetDrawableSize(mainwindow, &display_w, &display_h);
 	// Init scene
-	GLinit(display_w, display_h);
+	GLinit(display_w, display_h);									//S' inicia GL
 	//PhysicsInit();
 
-	//myInitCode();
+	//myInitCode();													//Es te de cridar el my_render_code 
 
 	
 	// Setup ImGui binding
@@ -120,9 +121,9 @@ int main(int argc, char** argv) {
 		
 		
 		GUI();
-		//PhysicsUpdate((float)expected_frametime);
-		if(!io.WantCaptureMouse) {
-			MouseEvent ev = {io.MousePos.x, io.MousePos.y, 
+		//PhysicsUpdate((float)expected_frametime);						//On es fiquen les isiques?
+		if(!io.WantCaptureMouse) {										
+			MouseEvent ev = {io.MousePos.x, io.MousePos.y,				
 				(io.MouseDown[0] ? MouseEvent::Button::Left : 
 				(io.MouseDown[1] ? MouseEvent::Button::Right :
 				(io.MouseDown[2] ? MouseEvent::Button::Middle :
@@ -131,10 +132,12 @@ int main(int argc, char** argv) {
 		}
 
 
-		double currentTime = (double)SDL_GetTicks() / 1000.0;
+		double currentTime = (double)SDL_GetTicks() / 1000.0;		//Update del renderer
 		GLrender(currentTime);
 		
-		//double currentTime = (double) SDL_GetTicks() / 1000.0;
+		
+		
+		//double currentTime = (double) SDL_GetTicks() / 1000.0;		//A my_renderer_code, te d' haber algo que agafi aixo y l utilitzi per renderitzar 
 		//myRenderCode(currentTime);
 		
 
@@ -142,10 +145,11 @@ int main(int argc, char** argv) {
 		SDL_GL_SwapWindow(mainwindow);
 		waitforFrameEnd();
 	}
+	
 
-	//myCleanupCode();
+	//myCleanupCode();												//Funcio que té d' estar a dins de my_render_code per treure coses de memoria 
 
-	GLcleanup();
+	GLcleanup();													//Es treu les coses de memoria
 
 	ImGui_ImplSdlGL3_Shutdown();
 	SDL_GL_DeleteContext(maincontext);
